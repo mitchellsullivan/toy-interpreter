@@ -1,13 +1,15 @@
+// Read file and run
+
 const fs = require('fs');
+const { runScript } = require('./lib');
 
 // Get filename from args
 const cleanArgs = process.argv.slice(2);
 const inputFilename = cleanArgs[0];
 
-
+// Read and parse input file into individual scripts
 const scripts = [];
 
-// Read input file
 try {
     if (!fs.existsSync(inputFilename)) {
         throw new Error(`file '${inputFilename}' does not exist`);
@@ -32,106 +34,9 @@ try {
     console.error(err);
 }
 
-let symbols = {};
-let stack = [];
-
-const run = (script) => {
-    stack = [];
-    symbols = { ...symbols, ...script }
-
-    stack.push({ name: "init", line: 0, args: {} });
-
-    loopy:
-    while (stack.length > 0) {
-        // Get top of stack
-        const frame = stack[stack.length - 1];
-        // Get lines in function
-        const funcLength = symbols[frame.name].length;
-
-        // Iterate lines
-        while (frame.line < funcLength) {
-            // Execute line
-            const execLine = symbols[frame.name][frame.line];
-            ++frame.line;
-
-            // Stay in current frame and evaluate args
-            const evaldArgs = {};
-
-            Object.keys(execLine).filter(k => k !== 'cmd').forEach((k) => {
-                const val = execLine[k];
-                if (String(val).startsWith('#')) {
-                    const varName = String(val).split('#')[1];
-                    evaldArgs[k] = symbols[varName];
-                }
-                else if (String(val).startsWith('$')) {
-                    const varName = String(val).split('$')[1];
-                    evaldArgs[k] = frame.args[varName];
-                }
-                else {
-                    evaldArgs[k] = val;
-                }
-            });
-
-            switch (execLine.cmd) {
-                case "print": {
-                    console.log(evaldArgs.value);
-                    break;
-                }
-                case "create": {
-                    symbols[evaldArgs.id] = evaldArgs.value;
-                    break;
-                }
-                case "update": {
-                    symbols[evaldArgs.id] = evaldArgs.value;
-                    break;
-                }
-                case "delete": {
-                    delete symbols[evaldArgs.id];
-                    break;
-                }
-                case "add": {
-                    symbols[evaldArgs.id] = evaldArgs.operand1 + evaldArgs.operand2;
-                    break;
-                }
-                case "subtract": {
-                    symbols[evaldArgs.id] = evaldArgs.operand1 - evaldArgs.operand2;
-                    break;
-                }
-                case "multiply": {
-                    symbols[evaldArgs.id] = evaldArgs.operand1 * evaldArgs.operand2;
-                    break;
-                }
-                case "divide": {
-                    symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
-                    break;
-                }
-                default: {
-                    // Jump out of current frame and call new func
-                    if (execLine.cmd.startsWith('#')) {
-                        const next = {
-                            name: execLine.cmd.split('#')[1],
-                            line: 0,
-                            args: { ...evaldArgs }
-                        };
-
-                        stack.push(next)
-                        continue loopy;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        // Remove from stack
-        if (frame.line === funcLength) {
-            stack.pop();
-        }
-    }
-}
-
-scripts.forEach(run);
-
-
-
+// Run all scripts
+scripts.forEach(s => {
+    runScript(s);
+    console.log();
+});
 
