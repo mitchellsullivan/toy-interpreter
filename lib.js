@@ -11,6 +11,7 @@ const runScript = (script) => {
     // Initialize
     stack.push({ name: "init", line: 0, args: {} });
 
+    // :-)
     loopy:
     while (stack.length > 0) {
         // Peek stack
@@ -24,7 +25,7 @@ const runScript = (script) => {
             const execLine = symbols[frame.name][frame.line];
             ++frame.line;
 
-            // Stay in current frame and evaluate args
+            // Evaluate special args
             const evaldArgs = {};
 
             // Evaluate parameters and pass by value
