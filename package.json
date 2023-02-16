@@ -1,11 +1,12 @@
 {
   "name": "toy-interpreter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fictitious Scripting Language (FSL) Interpreter",
   "main": "index.js",
-  "scripts": {
-  },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "FSL",
+    "Sands"
+  ],
+  "author": "github.com/mitchellsullivan",
   "license": "ISC"
 }
