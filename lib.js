@@ -25,7 +25,7 @@ const runScript = (script) => {
             const execLine = symbols[frame.name][frame.line];
             ++frame.line;
 
-            // Evaluate special args
+            // Evaluated special args
             const evaldArgs = {};
 
             // Evaluate parameters and pass by value
