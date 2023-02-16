@@ -1,4 +1,5 @@
 ### FICTITIOUS SCRIPTING LANGUAGE (FSL) INTERPRETER 
+Interview coding challenge  
 
 #### USAGE
 Run: `node index.js sample-script.json`  
