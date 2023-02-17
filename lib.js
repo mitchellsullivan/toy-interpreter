@@ -3,51 +3,34 @@
 let symbols = {};
 
 const runScript = (script) => {
-  // Clear stack but maintain symbols
   symbols = { ...symbols, ...script }
-
-  // Initialize
-  stack.push({
-    name: 'init',
-    line: 0,
-    args: {}
-  });
+  execFunction('init');
 }
 
-const execute = () => {
-  // :-)
-  loopy:
-  while (stack.length > 0) {
-    // Peek stack
-    const frame = stack[stack.length - 1];
-    // Get lines in function
-    const funcLength = symbols[frame.name].length;
-
-    // Iterate lines
-    while (frame.line < funcLength) {
-      // Execute line
-      const command = symbols[frame.name][frame.line];
-      ++frame.line;
+const execFunction = (functionName, caller = {}) => {
+  const func = symbols[functionName];
+  for (let i = 0; i < func.length; ++i) {
+      const command = func[i];
 
       // Evaluated special args
       const evaldArgs = {};
 
       // Evaluate parameters and pass by value
       Object.keys(command).forEach((k) => {
-        const val = command[k];
+        const name = command[k];
         if (k === 'cmd') {
           return;
         }
-        else if (String(val).startsWith('#')) {
-          const varName = val.substring(1);
+        else if (String(name).startsWith('#')) {
+          const varName = name.substring(1);
           evaldArgs[k] = symbols[varName];
         }
-        else if (String(val).startsWith('$')) {
-          const varName = val.substring(1);
-          evaldArgs[k] = frame.args[varName];
+        else if (String(name).startsWith('$')) {
+          const paramName = name.substring(1);
+          evaldArgs[k] = caller[paramName];
         }
         else {
-          evaldArgs[k] = val;
+          evaldArgs[k] = name;
         }
       });
 
@@ -87,17 +70,9 @@ const execute = () => {
         default: {
           // Jump out of current frame and call new func
           if (command.cmd.startsWith('#')) {
-            const name = command.cmd.substring(1);
-
-            stack.push({
-              name,
-              line: 0,
-              args: { ...evaldArgs }
-            });
-
-            continue loopy;
+            const functionName = command.cmd.substring(1);
+            execFunction(functionName, evaldArgs);
           }
-
           break;
         }
       }
