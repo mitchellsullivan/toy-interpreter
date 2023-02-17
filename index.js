@@ -1,7 +1,7 @@
 // Read file and run
 
 const fs = require('fs');
-const { runScript } = require('./lib');
+const { runScriptRecursive, runScriptIterative } = require('./lib');
 
 // Get filename from args
 const cleanArgs = process.argv.slice(2);
@@ -36,7 +36,8 @@ try {
 
 // Run all scripts
 scripts.forEach(s => {
-    runScript(s);
+    runScriptRecursive(s);
+    // runScriptIterative(s);
     console.log();
 });
 
