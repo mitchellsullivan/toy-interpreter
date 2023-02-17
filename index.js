@@ -17,12 +17,12 @@ try {
 
     const data = fs.readFileSync(inputFilename, 'utf8');
     const parsed = JSON.parse(data);
-    
+
     // Multiple scripts in file
     if (Array.isArray(parsed)) {
         scripts.push(...parsed);
     }
-    
+
     // Only one script in file (not in array form)
     else if (parsed !== null && typeof parsed === 'object') {
         scripts.push(parsed);
