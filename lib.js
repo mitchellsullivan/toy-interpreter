@@ -43,7 +43,7 @@ const runScript = (script) => {
           evaldArgs[k] = symbols[varName];
         }
         else if (String(val).startsWith('$')) {
-          const varName = val.substring('$');
+          const varName = val.substring(1);
           evaldArgs[k] = frame.args[varName];
         }
         else {
