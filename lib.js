@@ -39,11 +39,11 @@ const runScript = (script) => {
           return;
         }
         else if (String(val).startsWith('#')) {
-          const [, varName] = val.split('#');
+          const varName = val.substring(1);
           evaldArgs[k] = symbols[varName];
         }
         else if (String(val).startsWith('$')) {
-          const [, varName] = val.split('$');
+          const varName = val.substring('$');
           evaldArgs[k] = frame.args[varName];
         }
         else {
@@ -87,7 +87,7 @@ const runScript = (script) => {
         default: {
           // Jump out of current frame and call new func
           if (execLine.cmd.startsWith('#')) {
-            const [, name] = execLine.cmd.split('#');
+            const name = execLine.cmd.substring(1);
 
             stack.push({
               name,
