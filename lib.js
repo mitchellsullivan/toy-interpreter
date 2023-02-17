@@ -7,9 +7,7 @@ const runScriptRecursive = (script) => {
 
   const execFunction = (functionName, params = {}) => {
     const func = symbols[functionName];
-    for (let i = 0; i < func.length; i++) {
-        const execLine = func[i];
-  
+    for (const execLine of func) {
         // Evaluated special args
         const evaldArgs = {};
   
