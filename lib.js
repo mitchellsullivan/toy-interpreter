@@ -59,6 +59,9 @@ const runScriptRecursive = (script) => {
             break;
           }
           case 'divide': {
+            if (evaldArgs.operand2 === 0) {
+              throw new Error('cannot divide by zero')
+            }
             symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
             break;
           }
@@ -158,6 +161,9 @@ const runScriptIterative = (script) => {
           break;
         }
         case 'divide': {
+          if (evaldArgs.operand2 === 0) {
+            throw new Error('cannot divide by zero')
+          }
           symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
           break;
         }
