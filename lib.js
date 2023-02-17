@@ -67,7 +67,6 @@ const execFunction = (functionName, params = {}) => {
           break;
         }
         default: {
-          // Jump out of current frame and call new func
           if (execLine.cmd.startsWith('#')) {
             const functionName = execLine.cmd.substring(1);
             execFunction(functionName, evaldArgs);
