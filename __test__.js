@@ -1,7 +1,7 @@
 // Sort of useless. Just demonstrating test-consciousness without
 // pulling in third-party libraries, etc.
 
-const { runScript } = require('./lib');
+const { runScriptRecursive } = require('./lib');
 
 const tests = [
   {
@@ -26,7 +26,7 @@ const test = (testScript) => {
 
   try {
     console.assert(calls.length === 0);
-    runScript(testScript)
+    runScriptRecursive(testScript)
     console.assert(calls.length === 1);
     console.assert(calls[0][0] === 6.086956521739131);
   } catch (error) {
