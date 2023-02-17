@@ -7,34 +7,33 @@ const runScript = (script) => {
   execFunction('init');
 }
 
-const execFunction = (functionName, caller = {}) => {
+const execFunction = (functionName, params = {}) => {
   const func = symbols[functionName];
-  for (let i = 0; i < func.length; ++i) {
-      const command = func[i];
+  for (let i = 0; i < func.length; i++) {
+      const execLine = func[i];
 
       // Evaluated special args
       const evaldArgs = {};
 
       // Evaluate parameters and pass by value
-      Object.keys(command).forEach((k) => {
-        const name = command[k];
+      for (const [k, val] of Object.entries(execLine)) {
         if (k === 'cmd') {
-          return;
+          continue;
         }
-        else if (String(name).startsWith('#')) {
-          const varName = name.substring(1);
+        else if (String(val).startsWith('#')) {
+          const varName = val.substring(1);
           evaldArgs[k] = symbols[varName];
         }
-        else if (String(name).startsWith('$')) {
-          const paramName = name.substring(1);
-          evaldArgs[k] = caller[paramName];
+        else if (String(val).startsWith('$')) {
+          const paramName = val.substring(1);
+          evaldArgs[k] = params[paramName];
         }
         else {
-          evaldArgs[k] = name;
+          evaldArgs[k] = val;
         }
-      });
+      }
 
-      switch (command.cmd) {
+      switch (execLine.cmd) {
         case 'print': {
           console.log(evaldArgs.value);
           break;
@@ -69,8 +68,8 @@ const execFunction = (functionName, caller = {}) => {
         }
         default: {
           // Jump out of current frame and call new func
-          if (command.cmd.startsWith('#')) {
-            const functionName = command.cmd.substring(1);
+          if (execLine.cmd.startsWith('#')) {
+            const functionName = execLine.cmd.substring(1);
             execFunction(functionName, evaldArgs);
           }
           break;
