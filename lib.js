@@ -1,11 +1,9 @@
 // Interpreter
 
 let symbols = {};
-let stack = [];
 
 const runScript = (script) => {
   // Clear stack but maintain symbols
-  stack = [];
   symbols = { ...symbols, ...script }
 
   // Initialize
@@ -14,7 +12,9 @@ const runScript = (script) => {
     line: 0,
     args: {}
   });
+}
 
+const execute = () => {
   // :-)
   loopy:
   while (stack.length > 0) {
@@ -26,15 +26,15 @@ const runScript = (script) => {
     // Iterate lines
     while (frame.line < funcLength) {
       // Execute line
-      const execLine = symbols[frame.name][frame.line];
+      const command = symbols[frame.name][frame.line];
       ++frame.line;
 
       // Evaluated special args
       const evaldArgs = {};
 
       // Evaluate parameters and pass by value
-      Object.keys(execLine).forEach((k) => {
-        const val = execLine[k];
+      Object.keys(command).forEach((k) => {
+        const val = command[k];
         if (k === 'cmd') {
           return;
         }
@@ -51,7 +51,7 @@ const runScript = (script) => {
         }
       });
 
-      switch (execLine.cmd) {
+      switch (command.cmd) {
         case 'print': {
           console.log(evaldArgs.value);
           break;
@@ -86,8 +86,8 @@ const runScript = (script) => {
         }
         default: {
           // Jump out of current frame and call new func
-          if (execLine.cmd.startsWith('#')) {
-            const name = execLine.cmd.substring(1);
+          if (command.cmd.startsWith('#')) {
+            const name = command.cmd.substring(1);
 
             stack.push({
               name,
@@ -102,10 +102,6 @@ const runScript = (script) => {
         }
       }
     }
-
-    // Remove frame from stack
-    stack.pop();
-  }
 }
 
 module.exports = {
