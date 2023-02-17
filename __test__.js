@@ -5,11 +5,11 @@ const { runScript } = require('./lib');
 
 const tests = [
   {
-    "var1": 420,
-    "var2": 69,
-    "init": [
-      { "cmd": "divide", "id": "var3", "operand1": "#var1", "operand2": "#var2" },
-      { "cmd": "print", "value": "#var3" }
+    'var1': 420,
+    'var2': 69,
+    'init': [
+      { 'cmd': 'divide', 'id': 'var3', 'operand1': '#var1', 'operand2': '#var2' },
+      { 'cmd': 'print', 'value': '#var3' }
     ]
   }
 ];

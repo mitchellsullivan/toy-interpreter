@@ -10,7 +10,7 @@ const runScript = (script) => {
 
   // Initialize
   stack.push({
-    name: "init",
+    name: 'init',
     line: 0,
     args: {}
   });
@@ -52,35 +52,35 @@ const runScript = (script) => {
       });
 
       switch (execLine.cmd) {
-        case "print": {
+        case 'print': {
           console.log(evaldArgs.value);
           break;
         }
-        case "create": {
+        case 'create': {
           symbols[evaldArgs.id] = evaldArgs.value;
           break;
         }
-        case "update": {
+        case 'update': {
           symbols[evaldArgs.id] = evaldArgs.value;
           break;
         }
-        case "delete": {
+        case 'delete': {
           delete symbols[evaldArgs.id];
           break;
         }
-        case "add": {
+        case 'add': {
           symbols[evaldArgs.id] = evaldArgs.operand1 + evaldArgs.operand2;
           break;
         }
-        case "subtract": {
+        case 'subtract': {
           symbols[evaldArgs.id] = evaldArgs.operand1 - evaldArgs.operand2;
           break;
         }
-        case "multiply": {
+        case 'multiply': {
           symbols[evaldArgs.id] = evaldArgs.operand1 * evaldArgs.operand2;
           break;
         }
-        case "divide": {
+        case 'divide': {
           symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
           break;
         }
