@@ -99,10 +99,8 @@ const runScript = (script) => {
             }
         }
 
-        // Remove from stack
-        if (frame.line === funcLength) {
-            stack.pop();
-        }
+        // Remove frame from stack
+        stack.pop();
     }
 }
 
