@@ -6,69 +6,69 @@ const runScriptRecursive = (script) => {
   symbols = { ...symbols, ...script }
 
   const execFunction = (functionName, params = {}) => {
-    const func = symbols[functionName];
-    for (const execLine of func) {
+    const currFunc = symbols[functionName];
+    for (const currLine of currFunc) {
         // Evaluated special args
-        const evaldArgs = {};
+        const evald = {};
   
         // Evaluate parameters and pass by value
-        for (const [k, val] of Object.entries(execLine)) {
+        Object.entries(currLine).forEach(([k, val]) => {
           if (k === 'cmd') {
-            continue;
+            return;
           }
           else if (String(val).startsWith('#')) {
             const varName = val.substring(1);
-            evaldArgs[k] = symbols[varName];
+            evald[k] = symbols[varName];
           }
           else if (String(val).startsWith('$')) {
             const paramName = val.substring(1);
-            evaldArgs[k] = params[paramName];
+            evald[k] = params[paramName];
           }
           else {
-            evaldArgs[k] = val;
+            evald[k] = val;
           }
-        }
+        })
   
-        switch (execLine.cmd) {
+        switch (currLine.cmd) {
           case 'print': {
-            console.log(evaldArgs.value);
+            console.log(evald.value);
             break;
           }
           case 'create': {
-            symbols[evaldArgs.id] = evaldArgs.value;
+            symbols[evald.id] = evald.value;
             break;
           }
           case 'update': {
-            symbols[evaldArgs.id] = evaldArgs.value;
+            symbols[evald.id] = evald.value;
             break;
           }
           case 'delete': {
-            delete symbols[evaldArgs.id];
+            delete symbols[evald.id];
             break;
           }
           case 'add': {
-            symbols[evaldArgs.id] = evaldArgs.operand1 + evaldArgs.operand2;
+            symbols[evald.id] = evald.operand1 + evald.operand2;
             break;
           }
           case 'subtract': {
-            symbols[evaldArgs.id] = evaldArgs.operand1 - evaldArgs.operand2;
+            symbols[evald.id] = evald.operand1 - evald.operand2;
             break;
           }
           case 'multiply': {
-            symbols[evaldArgs.id] = evaldArgs.operand1 * evaldArgs.operand2;
+            symbols[evald.id] = evald.operand1 * evald.operand2;
             break;
           }
           case 'divide': {
-            if (evaldArgs.operand2 === 0) {
+            if (evald.operand2 === 0) {
               throw new Error('cannot divide by zero')
             }
-            symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
+            symbols[evald.id] = evald.operand1 / evald.operand2;
             break;
           }
           default: {
-            if (execLine.cmd.startsWith('#')) {
-              const functionName = execLine.cmd.substring(1);
-              execFunction(functionName, evaldArgs);
+            if (currLine.cmd.startsWith('#')) {
+              const functionName = currLine.cmd.substring(1);
+              execFunction(functionName, evald);
             }
             break;
           }
@@ -84,98 +84,93 @@ const runScriptRecursive = (script) => {
 let stack = [];
 
 const runScriptIterative = (script) => {
-  // Clear stack but maintain symbols
-  stack = [];
+  // Maintain symbols from last script
   symbols = { ...symbols, ...script }
 
   // Initialize
   stack.push({
     name: 'init',
     line: 0,
-    args: {}
+    params: {}
   });
 
-  // :-)
+  // I "got to" :-)
   loopy:
   while (stack.length > 0) {
     // Peek stack
     const frame = stack[stack.length - 1];
     // Get lines in function
-    const funcLength = symbols[frame.name].length;
+    const currFunc = symbols[frame.name];
 
     // Iterate lines
-    while (frame.line < funcLength) {
+    while (frame.line < currFunc.length) {
       // Execute line
-      const execLine = symbols[frame.name][frame.line];
-      ++frame.line;
+      const currLine = currFunc[frame.line++];
 
       // Evaluated special args
-      const evaldArgs = {};
+      const evald = {};
 
       // Evaluate parameters and pass by value
-      Object.keys(execLine).forEach((k) => {
-        const val = execLine[k];
+      Object.entries(currLine).forEach(([k, val]) => {
         if (k === 'cmd') {
           return;
         }
         else if (String(val).startsWith('#')) {
           const varName = val.substring(1);
-          evaldArgs[k] = symbols[varName];
+          evald[k] = symbols[varName];
         }
         else if (String(val).startsWith('$')) {
-          const varName = val.substring(1);
-          evaldArgs[k] = frame.args[varName];
+          const paramName = val.substring(1);
+          evald[k] = frame.params[paramName];
         }
         else {
-          evaldArgs[k] = val;
+          evald[k] = val;
         }
-      });
+      })
 
-      switch (execLine.cmd) {
+      switch (currLine.cmd) {
         case 'print': {
-          console.log(evaldArgs.value);
+          console.log(evald.value);
           break;
         }
         case 'create': {
-          symbols[evaldArgs.id] = evaldArgs.value;
+          symbols[evald.id] = evald.value;
           break;
         }
         case 'update': {
-          symbols[evaldArgs.id] = evaldArgs.value;
+          symbols[evald.id] = evald.value;
           break;
         }
         case 'delete': {
-          delete symbols[evaldArgs.id];
+          delete symbols[evald.id];
           break;
         }
         case 'add': {
-          symbols[evaldArgs.id] = evaldArgs.operand1 + evaldArgs.operand2;
+          symbols[evald.id] = evald.operand1 + evald.operand2;
           break;
         }
         case 'subtract': {
-          symbols[evaldArgs.id] = evaldArgs.operand1 - evaldArgs.operand2;
+          symbols[evald.id] = evald.operand1 - evald.operand2;
           break;
         }
         case 'multiply': {
-          symbols[evaldArgs.id] = evaldArgs.operand1 * evaldArgs.operand2;
+          symbols[evald.id] = evald.operand1 * evald.operand2;
           break;
         }
         case 'divide': {
-          if (evaldArgs.operand2 === 0) {
+          if (evald.operand2 === 0) {
             throw new Error('cannot divide by zero')
           }
-          symbols[evaldArgs.id] = evaldArgs.operand1 / evaldArgs.operand2;
+          symbols[evald.id] = evald.operand1 / evald.operand2;
           break;
         }
         default: {
           // Jump out of current frame and call new func
-          if (execLine.cmd.startsWith('#')) {
-            const name = execLine.cmd.substring(1);
-
+          if (currLine.cmd.startsWith('#')) {
             stack.push({
-              name,
+              name: currLine.cmd.substring(1),
               line: 0,
-              args: { ...evaldArgs }
+              params: { ...evald }
             });
 
             continue loopy;
