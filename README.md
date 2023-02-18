@@ -1,5 +1,7 @@
 ### FICTITIOUS SCRIPTING LANGUAGE (FSL) INTERPRETER 
-Interview coding challenge. Includes iterative and recursive versions of the main function.
+Interview coding challenge in JavaScript. Includes iterative and recursive versions of the main function.
+
+Go version: JavaScript Version: https://github.com/mitchellsullivan/toy-interpreter-go  
 
 #### USAGE
 Run: `node index.js sample-script.json`  
