@@ -94,7 +94,7 @@ const runScriptIterative = (script) => {
     params: {}
   });
 
-  // I "got to" :-)
+  // I've "got to" :-)
   loopy:
   while (stack.length > 0) {
     // Peek stack
