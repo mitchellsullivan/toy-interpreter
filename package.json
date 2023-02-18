@@ -1,5 +1,5 @@
 {
-  "name": "toy-interpreter",
+  "name": "toy-interpreter-js",
   "version": "1.0.0",
   "description": "Fictitious Scripting Language (FSL) Interpreter",
   "main": "index.js",
