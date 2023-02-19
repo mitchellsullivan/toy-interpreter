@@ -19,10 +19,9 @@ try {
     const parsed = JSON.parse(data);
 
     // Multiple scripts in file
-    if (Array.isArray(parsed)) {
+    if (parsed !== null && Array.isArray(parsed)) {
         scripts.push(...parsed);
     }
-
     // Only one script in file (not in array form)
     else if (parsed !== null && typeof parsed === 'object') {
         scripts.push(parsed);
